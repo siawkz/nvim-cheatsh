@@ -36,7 +36,9 @@ Plug 'siawkz/nvim-cheatsh'
 ```lua
 use {
   'siawkz/nvim-cheatsh',
-  requires = { {'nvim-telescope/telescope.nvim'} },
+  dependencies = {
+    "nvim-telescope/telescope.nvim",
+  },
   opts = {
    -- your configuration comes here
    -- or leave it empty to use the default settings
