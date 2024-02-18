@@ -26,7 +26,7 @@ function Cheat.close()
   end
 end
 
-local function get_query(...)
+local function get_ft_query(...)
   local args = { ... }
   if vim.tbl_islist(args) and #args == 1 and type(args[1]) == "table" then
     args = args[1]
@@ -53,7 +53,7 @@ local function get_query(...)
 end
 
 function Cheat.open(...)
-  local ft_query = get_query(...)
+  local ft_query = get_ft_query(...)
   if not Cheat.is_open() then
     view = View.create()
   end
@@ -71,7 +71,8 @@ end
 local function cheat_previewer()
   return previewers.new_buffer_previewer({
     define_preview = function(self, entry)
-      cheatsh.fetch_cheatsheet(entry.value, true, function(lines)
+      local ft_query = get_ft_query(entry.value)
+      cheatsh.fetch_cheatsheet(ft_query.query, true, function(lines)
         if not self.state.bufnr or not vim.api.nvim_buf_is_valid(self.state.bufnr) then
           return
         end
@@ -90,6 +91,16 @@ function Cheat.list()
         finder = finders.new_table({
           results = cheat_queries,
           entry_maker = function(entry)
+            if string.find(entry, "/") then
+              return {
+                value = {
+                  string.sub(entry, 1, string.find(entry, "/") - 1),
+                  string.sub(entry, string.find(entry, "/") + 1),
+                },
+                display = entry,
+                ordinal = entry,
+              }
+            end
             return {
               value = entry,
               display = entry,
