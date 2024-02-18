@@ -2,6 +2,16 @@
 
 `nvim-cheatsh` is a Neovim plugin that integrates with [cheat.sh](https://github.com/chubin/cheat.sh), offering quick access to cheat sheets and documentation for various programming languages, frameworks, and tools directly within your Neovim environment. This plugin utilizes Telescope.nvim to provide an interactive search interface for finding and viewing cheat sheets.
 
+## Screenshots
+
+### Cheat Command
+
+![Cheat](media/Cheat.gif)
+
+### CheatList Command
+
+![CheatList](media/CheatList.gif)
+
 ## Features
 
 - **Seamless Integration with Telescope**: Leverage Telescope's powerful search capabilities to find cheat sheets.
