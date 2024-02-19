@@ -44,7 +44,7 @@ Plug 'siawkz/nvim-cheatsh'
 ### Using [lazy.nvim](https://github.com/folke/lazy.nvim)
 
 ```lua
-use {
+{
   'siawkz/nvim-cheatsh',
   dependencies = {
     "nvim-telescope/telescope.nvim",
