@@ -1,6 +1,6 @@
 # nvim-cheatsh
 
-`nvim-cheatsh` is a Neovim plugin that integrates with [cheat.sh](https://github.com/chubin/cheat.sh), offering quick access to cheat sheets and documentation for various programming languages, frameworks, and tools directly within your Neovim environment. This plugin utilizes Telescope.nvim to provide an interactive search interface for finding and viewing cheat sheets.
+`nvim-cheatsh` is a Neovim plugin that integrates with [cheat.sh](https://github.com/chubin/cheat.sh), offering quick access to cheat sheets and documentation for various programming languages, frameworks, and tools directly within your Neovim environment. This plugin utilizes fzf-lua to provide an interactive search interface for finding and viewing cheat sheets.
 
 ## Screenshots
 
@@ -14,12 +14,12 @@
 
 ## Features
 
-- **Seamless Integration with Telescope**: Leverage Telescope's powerful search capabilities to find cheat sheets.
+- **Seamless Integration with fzf-lua**: Leverage fzf-lua's powerful search capabilities to find cheat sheets.
 - **Customizable Display Options**: Configure the display position and size of the cheat sheet window according to your preferences.
 
 ## Dependencies
 
-- [Telescope.nvim](https://github.com/nvim-telescope/telescope.nvim)
+- [fzf-lua](https://github.com/ibhagwan/fzf-lua)
 
 ## Installation
 
@@ -30,14 +30,14 @@ You can install `nvim-cheatsh` using your favorite package manager along with it
 ```lua
 use {
   'siawkz/nvim-cheatsh',
-  requires = { {'nvim-telescope/telescope.nvim'} }
+  requires = { {'ibhagwan/fzf-lua'} }
 }
 ```
 
 ### Using vim-plug
 
 ```lua
-Plug 'nvim-telescope/telescope.nvim'
+Plug 'ibhagwan/fzf-lua'
 Plug 'siawkz/nvim-cheatsh'
 ```
 
@@ -47,7 +47,7 @@ Plug 'siawkz/nvim-cheatsh'
 {
   'siawkz/nvim-cheatsh',
   dependencies = {
-    "nvim-telescope/telescope.nvim",
+    "ibhagwan/fzf-lua",
   },
   opts = {
    -- your configuration comes here
@@ -79,7 +79,7 @@ After installation and configuration, you can use nvim-cheatsh with the followin
 ```
 :Cheat <query>: Search for a cheat sheet and open a cheat sheet window.
 :CheatClose: Close the currently open cheat sheet window.
-:CheatList: List available cheat sheets in a Telescope picker.
+:CheatList: List available cheat sheets in a fzf-lua picker.
 ```
 
 #### Query Format

@@ -1,12 +1,7 @@
 local View = require("nvim-cheatsh.view")
 local config = require("nvim-cheatsh.config")
 local cheatsh = require("nvim-cheatsh.cheatsh")
-local pickers = require("telescope.pickers")
-local finders = require("telescope.finders")
-local previewers = require("telescope.previewers")
-local conf = require("telescope.config").values
-local action_state = require("telescope.actions.state")
-local actions = require("telescope.actions")
+local fzf = require("fzf-lua")
 
 local Cheat = {}
 
@@ -28,7 +23,14 @@ end
 
 local function get_ft_query(...)
   local args = { ... }
-  if vim.tbl_islist(args) and #args == 1 and type(args[1]) == "table" then
+  -- if no arguments, open the list
+  if #args == 0 then
+    return {
+      ft = "sh",
+      query = "list",
+    }
+  end
+  if vim.islist(args) and #args == 1 and type(args[1]) == "table" then
     args = args[1]
   end
   -- if there is only 1 argument, it is the query
@@ -68,60 +70,29 @@ function Cheat.open(...)
   end)
 end
 
-local function cheat_previewer()
-  return previewers.new_buffer_previewer({
-    define_preview = function(self, entry)
-      local ft_query = get_ft_query(entry.value)
-      cheatsh.fetch_cheatsheet(ft_query.query, true, function(lines)
-        if not self.state.bufnr or not vim.api.nvim_buf_is_valid(self.state.bufnr) then
-          return
-        end
-        vim.api.nvim_buf_set_lines(self.state.bufnr, 0, -1, false, lines)
-      end)
-    end,
-  })
-end
-
 function Cheat.list()
-  local opts = {}
   cheatsh.fetch_list(function(cheat_queries)
-    pickers
-      .new(opts, {
-        prompt_title = "cheat.sh",
-        finder = finders.new_table({
-          results = cheat_queries,
-          entry_maker = function(entry)
-            if string.find(entry, "/") then
-              return {
-                value = {
-                  string.sub(entry, 1, string.find(entry, "/") - 1),
-                  string.sub(entry, string.find(entry, "/") + 1),
-                },
-                display = entry,
-                ordinal = entry,
-              }
-            end
-            return {
-              value = entry,
-              display = entry,
-              ordinal = entry,
-            }
-          end,
-        }),
-        sorter = conf.generic_sorter(opts),
-        previewer = cheat_previewer(),
-        attach_mappings = function(prompt_bufnr, _)
-          actions.select_default:replace(function()
-            local selection = action_state.get_selected_entry()
-            if selection then
-              actions.close(prompt_bufnr)
-              Cheat.open(selection.value)
-            end
-          end)
-          return true
+    fzf.fzf_exec(cheat_queries, {
+      prompt = "cheat.sh> ",
+      previewer = false,
+      preview = {
+        type = "cmd",
+        fn = function(items)
+          return string.format(
+            "curl -s '%s%s'",
+            config.options.cheatsh_url,
+            items[1]
+          )
         end,
-      })
-      :find()
+      },
+      actions = {
+        default = function(selected)
+          if selected[1] then
+            Cheat.open(selected[1])
+          end
+        end,
+      },
+    })
   end)
 end
 
